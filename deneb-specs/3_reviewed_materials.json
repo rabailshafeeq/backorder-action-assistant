@@ -1,0 +1,116 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "background": "#f9f9f7",
+  "config": {
+    "font": "Segoe UI, sans-serif",
+    "view": {
+      "stroke": "transparent"
+    }
+  },
+  "data": {
+    "name": "dataset"
+  },
+  "transform": [
+    {
+      "joinaggregate": [
+        {
+          "op": "count",
+          "as": "TotalCount"
+        }
+      ]
+    },
+    {
+      "filter": "datum.MRPReviewed_Flag == 'Yes'"
+    },
+    {
+      "aggregate": [
+        {
+          "op": "count",
+          "as": "ReviewedCount"
+        },
+        {
+          "op": "mean",
+          "field": "TotalCount",
+          "as": "TotalCount"
+        }
+      ]
+    },
+    {
+      "calculate": "round(datum.ReviewedCount / datum.TotalCount * 100) + '%'",
+      "as": "ReviewedPctLabel"
+    },
+    {
+      "calculate": "'of ' + format(datum.TotalCount, ',') + ' in current filter'",
+      "as": "SubLabel"
+    }
+  ],
+  "layer": [
+    {
+      "mark": {
+        "type": "text",
+        "text": "REVIEWED MATERIALS",
+        "fontSize": 12,
+        "fontWeight": 700,
+        "color": "#5c5b54",
+        "align": "left",
+        "baseline": "top",
+        "dx": -70,
+        "dy": -40
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "fontSize": 28,
+        "fontWeight": 700,
+        "color": "#0b0b0b",
+        "align": "left",
+        "baseline": "middle",
+        "dx": -70,
+        "dy": -5
+      },
+      "encoding": {
+        "text": {
+          "field": "ReviewedCount",
+          "type": "quantitative",
+          "format": ","
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "fontSize": 14,
+        "fontWeight": 600,
+        "color": "#5c5b54",
+        "align": "left",
+        "baseline": "middle",
+        "dx": 20,
+        "dy": -3
+      },
+      "encoding": {
+        "text": {
+          "field": "ReviewedPctLabel"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "fontSize": 12,
+        "color": "#5c5b54",
+        "align": "left",
+        "baseline": "top",
+        "dx": -70,
+        "dy": 18
+      },
+      "encoding": {
+        "text": {
+          "field": "SubLabel"
+        }
+      }
+    }
+  ],
+  "width": "container",
+  "height": "container"
+}

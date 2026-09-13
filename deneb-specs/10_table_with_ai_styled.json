@@ -1,0 +1,1156 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "background": "#f9f9f7",
+  "config": {
+    "font": "Segoe UI, sans-serif",
+    "view": {
+      "stroke": "transparent"
+    }
+  },
+  "data": {
+    "name": "dataset"
+  },
+  "hconcat": [
+    {
+      "vconcat": [
+        {
+          "width": 740,
+          "height": 20,
+          "data": {
+            "values": [
+              {
+                "label": "PRIORITY",
+                "x": 4
+              },
+              {
+                "label": "MATERIAL",
+                "x": 84
+              },
+              {
+                "label": "VENDOR",
+                "x": 380
+              },
+              {
+                "label": "DELAY",
+                "x": 520
+              },
+              {
+                "label": "REVENUE IMPACT",
+                "x": 572
+              },
+              {
+                "label": "REVIEWED",
+                "x": 668
+              }
+            ]
+          },
+          "mark": {
+            "type": "text",
+            "fontSize": 10.5,
+            "fontWeight": 700,
+            "color": "#5c5b54",
+            "align": "left",
+            "baseline": "top"
+          },
+          "encoding": {
+            "x": {
+              "field": "x",
+              "type": "quantitative",
+              "axis": null,
+              "scale": {
+                "domain": [
+                  0,
+                  740
+                ]
+              }
+            },
+            "y": {
+              "value": 2
+            },
+            "text": {
+              "field": "label"
+            }
+          }
+        },
+        {
+          "transform": [
+            {
+              "window": [
+                {
+                  "op": "rank",
+                  "as": "rank"
+                }
+              ],
+              "sort": [
+                {
+                  "field": "PriorityScore",
+                  "order": "descending"
+                }
+              ]
+            },
+            {
+              "filter": "datum.rank <= 18"
+            },
+            {
+              "window": [
+                {
+                  "op": "row_number",
+                  "as": "rowIndex"
+                }
+              ],
+              "sort": [
+                {
+                  "field": "rank",
+                  "order": "ascending"
+                }
+              ]
+            },
+            {
+              "calculate": "'$' + format(datum['EstRevenueImpact'], ',.0f')",
+              "as": "RevenueLabel"
+            },
+            {
+              "calculate": "datum.MRPReviewed_Flag",
+              "as": "ReviewedLabel"
+            },
+            {
+              "calculate": "'Plant ' + datum.Plant",
+              "as": "PlantLabel"
+            },
+            {
+              "calculate": "datum.PriorityTier == 'Critical' ? '#D64545' : datum.PriorityTier == 'High' ? '#E8724C' : datum.PriorityTier == 'Medium' ? '#E0A62E' : '#5C8A6E'",
+              "as": "PriorityColor"
+            },
+            {
+              "calculate": "datum.PriorityTier == 'Critical' ? '#FBE7E7' : datum.PriorityTier == 'High' ? '#FCEBE3' : datum.PriorityTier == 'Medium' ? '#FBF1DE' : '#E6EEE9'",
+              "as": "PriorityBgColor"
+            }
+          ],
+          "layer": [
+            {
+              "params": [
+                {
+                  "name": "rowSelect",
+                  "select": {
+                    "type": "point",
+                    "fields": [
+                      "open862_key"
+                    ],
+                    "toggle": false
+                  }
+                }
+              ],
+              "mark": {
+                "type": "rect",
+                "height": 36,
+                "cursor": "pointer"
+              },
+              "encoding": {
+                "y": {
+                  "field": "rowIndex",
+                  "type": "ordinal",
+                  "axis": null,
+                  "sort": "ascending"
+                },
+                "x": {
+                  "value": 0
+                },
+                "x2": {
+                  "value": 740
+                },
+                "color": {
+                  "condition": {
+                    "param": "rowSelect",
+                    "empty": false,
+                    "value": "#E8724C22"
+                  },
+                  "value": "#f9f9f7"
+                }
+              }
+            },
+            {
+              "mark": {
+                "type": "circle",
+                "size": 26,
+                "cursor": "pointer"
+              },
+              "encoding": {
+                "y": {
+                  "field": "rowIndex",
+                  "type": "ordinal",
+                  "axis": null,
+                  "sort": "ascending"
+                },
+                "x": {
+                  "value": 15
+                },
+                "color": {
+                  "field": "PriorityColor",
+                  "type": "nominal",
+                  "scale": null
+                }
+              }
+            },
+            {
+              "mark": {
+                "type": "text",
+                "fontSize": 10,
+                "fontWeight": 700,
+                "align": "left",
+                "baseline": "middle",
+                "cursor": "pointer"
+              },
+              "encoding": {
+                "y": {
+                  "field": "rowIndex",
+                  "type": "ordinal",
+                  "axis": null,
+                  "sort": "ascending"
+                },
+                "x": {
+                  "value": 24
+                },
+                "text": {
+                  "field": "PriorityTier"
+                },
+                "color": {
+                  "field": "PriorityColor",
+                  "type": "nominal",
+                  "scale": null
+                }
+              }
+            },
+            {
+              "mark": {
+                "type": "text",
+                "fontSize": 11.5,
+                "fontWeight": 700,
+                "align": "left",
+                "baseline": "middle",
+                "color": "#1a1a18",
+                "limit": 280,
+                "dy": -7
+              },
+              "encoding": {
+                "y": {
+                  "field": "rowIndex",
+                  "type": "ordinal",
+                  "axis": null,
+                  "sort": "ascending"
+                },
+                "x": {
+                  "value": 84
+                },
+                "text": {
+                  "field": "ItemDesc"
+                }
+              }
+            },
+            {
+              "mark": {
+                "type": "text",
+                "fontSize": 10,
+                "align": "left",
+                "baseline": "middle",
+                "color": "#6b6a63",
+                "dy": 8
+              },
+              "encoding": {
+                "y": {
+                  "field": "rowIndex",
+                  "type": "ordinal",
+                  "axis": null,
+                  "sort": "ascending"
+                },
+                "x": {
+                  "value": 84
+                },
+                "text": {
+                  "field": "PlantLabel"
+                }
+              }
+            },
+            {
+              "mark": {
+                "type": "text",
+                "fontSize": 11.5,
+                "align": "left",
+                "baseline": "middle",
+                "color": "#2b2b29",
+                "limit": 130
+              },
+              "encoding": {
+                "y": {
+                  "field": "rowIndex",
+                  "type": "ordinal",
+                  "axis": null,
+                  "sort": "ascending"
+                },
+                "x": {
+                  "value": 380
+                },
+                "text": {
+                  "field": "VendorName"
+                }
+              }
+            },
+            {
+              "mark": {
+                "type": "text",
+                "fontSize": 11.5,
+                "align": "left",
+                "baseline": "middle",
+                "color": "#2b2b29"
+              },
+              "encoding": {
+                "y": {
+                  "field": "rowIndex",
+                  "type": "ordinal",
+                  "axis": null,
+                  "sort": "ascending"
+                },
+                "x": {
+                  "value": 520
+                },
+                "text": {
+                  "field": "DelayDays"
+                }
+              }
+            },
+            {
+              "mark": {
+                "type": "text",
+                "fontSize": 11.5,
+                "align": "left",
+                "baseline": "middle",
+                "color": "#2b2b29"
+              },
+              "encoding": {
+                "y": {
+                  "field": "rowIndex",
+                  "type": "ordinal",
+                  "axis": null,
+                  "sort": "ascending"
+                },
+                "x": {
+                  "value": 572
+                },
+                "text": {
+                  "field": "RevenueLabel"
+                }
+              }
+            },
+            {
+              "mark": {
+                "type": "text",
+                "fontSize": 11.5,
+                "align": "left",
+                "baseline": "middle",
+                "color": "#2b2b29"
+              },
+              "encoding": {
+                "y": {
+                  "field": "rowIndex",
+                  "type": "ordinal",
+                  "axis": null,
+                  "sort": "ascending"
+                },
+                "x": {
+                  "value": 668
+                },
+                "text": {
+                  "field": "ReviewedLabel"
+                }
+              }
+            }
+          ],
+          "width": 740,
+          "height": {
+            "step": 36
+          }
+        }
+      ]
+    },
+    {
+      "width": 320,
+      "height": 500,
+      "transform": [
+        {
+          "filter": {
+            "param": "rowSelect"
+          }
+        },
+        {
+          "aggregate": [
+            {
+              "op": "count",
+              "as": "RowCount"
+            },
+            {
+              "op": "min",
+              "field": "ItemDesc",
+              "as": "ItemDesc"
+            },
+            {
+              "op": "min",
+              "field": "AI_Explanation",
+              "as": "AI_Explanation"
+            },
+            {
+              "op": "min",
+              "field": "Plant",
+              "as": "Plant"
+            },
+            {
+              "op": "min",
+              "field": "VendorName",
+              "as": "VendorName"
+            }
+          ]
+        },
+        {
+          "calculate": "datum.RowCount == 1 ? datum.ItemDesc : 'AI Recommendation'",
+          "as": "HeaderText"
+        },
+        {
+          "calculate": "datum.RowCount == 1 ? ('Plant ' + datum.Plant + '  \u00b7  ' + datum.VendorName) : ''",
+          "as": "SubText"
+        },
+        {
+          "calculate": "datum.RowCount == 1 ? datum.AI_Explanation : 'Click a material on the left to see the AI-generated recommendation for that item.'",
+          "as": "SourceText"
+        },
+        {
+          "calculate": "slice(datum.SourceText, 0, 50)",
+          "as": "chunk1"
+        },
+        {
+          "calculate": "length(datum.SourceText) <= 50 ? length(datum.SourceText) : (lastindexof(datum.chunk1, ' ') > 0 ? lastindexof(datum.chunk1, ' ') : 50)",
+          "as": "brk1"
+        },
+        {
+          "calculate": "trim(slice(datum.SourceText, 0, datum.brk1))",
+          "as": "Line1"
+        },
+        {
+          "calculate": "trim(slice(datum.SourceText, datum.brk1))",
+          "as": "Rem1"
+        },
+        {
+          "calculate": "slice(datum.Rem1, 0, 50)",
+          "as": "chunk2"
+        },
+        {
+          "calculate": "length(datum.Rem1) <= 50 ? length(datum.Rem1) : (lastindexof(datum.chunk2, ' ') > 0 ? lastindexof(datum.chunk2, ' ') : 50)",
+          "as": "brk2"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem1, 0, datum.brk2))",
+          "as": "Line2"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem1, datum.brk2))",
+          "as": "Rem2"
+        },
+        {
+          "calculate": "slice(datum.Rem2, 0, 50)",
+          "as": "chunk3"
+        },
+        {
+          "calculate": "length(datum.Rem2) <= 50 ? length(datum.Rem2) : (lastindexof(datum.chunk3, ' ') > 0 ? lastindexof(datum.chunk3, ' ') : 50)",
+          "as": "brk3"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem2, 0, datum.brk3))",
+          "as": "Line3"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem2, datum.brk3))",
+          "as": "Rem3"
+        },
+        {
+          "calculate": "slice(datum.Rem3, 0, 50)",
+          "as": "chunk4"
+        },
+        {
+          "calculate": "length(datum.Rem3) <= 50 ? length(datum.Rem3) : (lastindexof(datum.chunk4, ' ') > 0 ? lastindexof(datum.chunk4, ' ') : 50)",
+          "as": "brk4"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem3, 0, datum.brk4))",
+          "as": "Line4"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem3, datum.brk4))",
+          "as": "Rem4"
+        },
+        {
+          "calculate": "slice(datum.Rem4, 0, 50)",
+          "as": "chunk5"
+        },
+        {
+          "calculate": "length(datum.Rem4) <= 50 ? length(datum.Rem4) : (lastindexof(datum.chunk5, ' ') > 0 ? lastindexof(datum.chunk5, ' ') : 50)",
+          "as": "brk5"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem4, 0, datum.brk5))",
+          "as": "Line5"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem4, datum.brk5))",
+          "as": "Rem5"
+        },
+        {
+          "calculate": "slice(datum.Rem5, 0, 50)",
+          "as": "chunk6"
+        },
+        {
+          "calculate": "length(datum.Rem5) <= 50 ? length(datum.Rem5) : (lastindexof(datum.chunk6, ' ') > 0 ? lastindexof(datum.chunk6, ' ') : 50)",
+          "as": "brk6"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem5, 0, datum.brk6))",
+          "as": "Line6"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem5, datum.brk6))",
+          "as": "Rem6"
+        },
+        {
+          "calculate": "slice(datum.Rem6, 0, 50)",
+          "as": "chunk7"
+        },
+        {
+          "calculate": "length(datum.Rem6) <= 50 ? length(datum.Rem6) : (lastindexof(datum.chunk7, ' ') > 0 ? lastindexof(datum.chunk7, ' ') : 50)",
+          "as": "brk7"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem6, 0, datum.brk7))",
+          "as": "Line7"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem6, datum.brk7))",
+          "as": "Rem7"
+        },
+        {
+          "calculate": "slice(datum.Rem7, 0, 50)",
+          "as": "chunk8"
+        },
+        {
+          "calculate": "length(datum.Rem7) <= 50 ? length(datum.Rem7) : (lastindexof(datum.chunk8, ' ') > 0 ? lastindexof(datum.chunk8, ' ') : 50)",
+          "as": "brk8"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem7, 0, datum.brk8))",
+          "as": "Line8"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem7, datum.brk8))",
+          "as": "Rem8"
+        },
+        {
+          "calculate": "slice(datum.Rem8, 0, 50)",
+          "as": "chunk9"
+        },
+        {
+          "calculate": "length(datum.Rem8) <= 50 ? length(datum.Rem8) : (lastindexof(datum.chunk9, ' ') > 0 ? lastindexof(datum.chunk9, ' ') : 50)",
+          "as": "brk9"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem8, 0, datum.brk9))",
+          "as": "Line9"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem8, datum.brk9))",
+          "as": "Rem9"
+        },
+        {
+          "calculate": "slice(datum.Rem9, 0, 50)",
+          "as": "chunk10"
+        },
+        {
+          "calculate": "length(datum.Rem9) <= 50 ? length(datum.Rem9) : (lastindexof(datum.chunk10, ' ') > 0 ? lastindexof(datum.chunk10, ' ') : 50)",
+          "as": "brk10"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem9, 0, datum.brk10))",
+          "as": "Line10"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem9, datum.brk10))",
+          "as": "Rem10"
+        },
+        {
+          "calculate": "slice(datum.Rem10, 0, 50)",
+          "as": "chunk11"
+        },
+        {
+          "calculate": "length(datum.Rem10) <= 50 ? length(datum.Rem10) : (lastindexof(datum.chunk11, ' ') > 0 ? lastindexof(datum.chunk11, ' ') : 50)",
+          "as": "brk11"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem10, 0, datum.brk11))",
+          "as": "Line11"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem10, datum.brk11))",
+          "as": "Rem11"
+        },
+        {
+          "calculate": "slice(datum.Rem11, 0, 50)",
+          "as": "chunk12"
+        },
+        {
+          "calculate": "length(datum.Rem11) <= 50 ? length(datum.Rem11) : (lastindexof(datum.chunk12, ' ') > 0 ? lastindexof(datum.chunk12, ' ') : 50)",
+          "as": "brk12"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem11, 0, datum.brk12))",
+          "as": "Line12"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem11, datum.brk12))",
+          "as": "Rem12"
+        },
+        {
+          "calculate": "slice(datum.Rem12, 0, 50)",
+          "as": "chunk13"
+        },
+        {
+          "calculate": "length(datum.Rem12) <= 50 ? length(datum.Rem12) : (lastindexof(datum.chunk13, ' ') > 0 ? lastindexof(datum.chunk13, ' ') : 50)",
+          "as": "brk13"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem12, 0, datum.brk13))",
+          "as": "Line13"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem12, datum.brk13))",
+          "as": "Rem13"
+        },
+        {
+          "calculate": "slice(datum.Rem13, 0, 50)",
+          "as": "chunk14"
+        },
+        {
+          "calculate": "length(datum.Rem13) <= 50 ? length(datum.Rem13) : (lastindexof(datum.chunk14, ' ') > 0 ? lastindexof(datum.chunk14, ' ') : 50)",
+          "as": "brk14"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem13, 0, datum.brk14))",
+          "as": "Line14"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem13, datum.brk14))",
+          "as": "Rem14"
+        },
+        {
+          "calculate": "slice(datum.Rem14, 0, 50)",
+          "as": "chunk15"
+        },
+        {
+          "calculate": "length(datum.Rem14) <= 50 ? length(datum.Rem14) : (lastindexof(datum.chunk15, ' ') > 0 ? lastindexof(datum.chunk15, ' ') : 50)",
+          "as": "brk15"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem14, 0, datum.brk15))",
+          "as": "Line15"
+        },
+        {
+          "calculate": "trim(slice(datum.Rem14, datum.brk15))",
+          "as": "Rem15"
+        },
+        {
+          "calculate": "length(datum.Rem15) > 50 ? slice(datum.Rem15, 0, 49) + '\u2026' : datum.Rem15",
+          "as": "Line16"
+        }
+      ],
+      "layer": [
+        {
+          "mark": {
+            "type": "rect",
+            "height": 4,
+            "cursor": "default"
+          },
+          "encoding": {
+            "x": {
+              "value": 0
+            },
+            "x2": {
+              "value": 320
+            },
+            "y": {
+              "value": 0
+            },
+            "color": {
+              "value": "#E8724C"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 10,
+            "fontWeight": 700,
+            "align": "left",
+            "baseline": "middle",
+            "y": 25,
+            "color": "#E8724C"
+          },
+          "encoding": {
+            "x": {
+              "value": 14
+            },
+            "text": {
+              "value": "AI ANALYSIS"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 14,
+            "fontWeight": 700,
+            "color": "#E8724C",
+            "align": "left",
+            "baseline": "top",
+            "limit": 280
+          },
+          "encoding": {
+            "x": {
+              "value": 14
+            },
+            "y": {
+              "value": 48
+            },
+            "text": {
+              "field": "HeaderText"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 10.5,
+            "fontWeight": 400,
+            "color": "#6b6a63",
+            "align": "left",
+            "baseline": "top",
+            "limit": 280
+          },
+          "encoding": {
+            "x": {
+              "value": 14
+            },
+            "y": {
+              "value": 68
+            },
+            "text": {
+              "field": "SubText"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 11.5,
+            "fontWeight": 400,
+            "color": "#2b2b29",
+            "align": "left",
+            "baseline": "top"
+          },
+          "encoding": {
+            "x": {
+              "value": 14
+            },
+            "y": {
+              "value": 90
+            },
+            "text": {
+              "field": "Line1"
+            },
+            "tooltip": {
+              "field": "SourceText",
+              "title": "Full recommendation"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 11.5,
+            "fontWeight": 400,
+            "color": "#2b2b29",
+            "align": "left",
+            "baseline": "top"
+          },
+          "encoding": {
+            "x": {
+              "value": 14
+            },
+            "y": {
+              "value": 105
+            },
+            "text": {
+              "field": "Line2"
+            },
+            "tooltip": {
+              "field": "SourceText",
+              "title": "Full recommendation"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 11.5,
+            "fontWeight": 400,
+            "color": "#2b2b29",
+            "align": "left",
+            "baseline": "top"
+          },
+          "encoding": {
+            "x": {
+              "value": 14
+            },
+            "y": {
+              "value": 120
+            },
+            "text": {
+              "field": "Line3"
+            },
+            "tooltip": {
+              "field": "SourceText",
+              "title": "Full recommendation"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 11.5,
+            "fontWeight": 400,
+            "color": "#2b2b29",
+            "align": "left",
+            "baseline": "top"
+          },
+          "encoding": {
+            "x": {
+              "value": 14
+            },
+            "y": {
+              "value": 135
+            },
+            "text": {
+              "field": "Line4"
+            },
+            "tooltip": {
+              "field": "SourceText",
+              "title": "Full recommendation"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 11.5,
+            "fontWeight": 400,
+            "color": "#2b2b29",
+            "align": "left",
+            "baseline": "top"
+          },
+          "encoding": {
+            "x": {
+              "value": 14
+            },
+            "y": {
+              "value": 150
+            },
+            "text": {
+              "field": "Line5"
+            },
+            "tooltip": {
+              "field": "SourceText",
+              "title": "Full recommendation"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 11.5,
+            "fontWeight": 400,
+            "color": "#2b2b29",
+            "align": "left",
+            "baseline": "top"
+          },
+          "encoding": {
+            "x": {
+              "value": 14
+            },
+            "y": {
+              "value": 165
+            },
+            "text": {
+              "field": "Line6"
+            },
+            "tooltip": {
+              "field": "SourceText",
+              "title": "Full recommendation"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 11.5,
+            "fontWeight": 400,
+            "color": "#2b2b29",
+            "align": "left",
+            "baseline": "top"
+          },
+          "encoding": {
+            "x": {
+              "value": 14
+            },
+            "y": {
+              "value": 180
+            },
+            "text": {
+              "field": "Line7"
+            },
+            "tooltip": {
+              "field": "SourceText",
+              "title": "Full recommendation"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 11.5,
+            "fontWeight": 400,
+            "color": "#2b2b29",
+            "align": "left",
+            "baseline": "top"
+          },
+          "encoding": {
+            "x": {
+              "value": 14
+            },
+            "y": {
+              "value": 195
+            },
+            "text": {
+              "field": "Line8"
+            },
+            "tooltip": {
+              "field": "SourceText",
+              "title": "Full recommendation"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 11.5,
+            "fontWeight": 400,
+            "color": "#2b2b29",
+            "align": "left",
+            "baseline": "top"
+          },
+          "encoding": {
+            "x": {
+              "value": 14
+            },
+            "y": {
+              "value": 210
+            },
+            "text": {
+              "field": "Line9"
+            },
+            "tooltip": {
+              "field": "SourceText",
+              "title": "Full recommendation"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 11.5,
+            "fontWeight": 400,
+            "color": "#2b2b29",
+            "align": "left",
+            "baseline": "top"
+          },
+          "encoding": {
+            "x": {
+              "value": 14
+            },
+            "y": {
+              "value": 225
+            },
+            "text": {
+              "field": "Line10"
+            },
+            "tooltip": {
+              "field": "SourceText",
+              "title": "Full recommendation"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 11.5,
+            "fontWeight": 400,
+            "color": "#2b2b29",
+            "align": "left",
+            "baseline": "top"
+          },
+          "encoding": {
+            "x": {
+              "value": 14
+            },
+            "y": {
+              "value": 240
+            },
+            "text": {
+              "field": "Line11"
+            },
+            "tooltip": {
+              "field": "SourceText",
+              "title": "Full recommendation"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 11.5,
+            "fontWeight": 400,
+            "color": "#2b2b29",
+            "align": "left",
+            "baseline": "top"
+          },
+          "encoding": {
+            "x": {
+              "value": 14
+            },
+            "y": {
+              "value": 255
+            },
+            "text": {
+              "field": "Line12"
+            },
+            "tooltip": {
+              "field": "SourceText",
+              "title": "Full recommendation"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 11.5,
+            "fontWeight": 400,
+            "color": "#2b2b29",
+            "align": "left",
+            "baseline": "top"
+          },
+          "encoding": {
+            "x": {
+              "value": 14
+            },
+            "y": {
+              "value": 270
+            },
+            "text": {
+              "field": "Line13"
+            },
+            "tooltip": {
+              "field": "SourceText",
+              "title": "Full recommendation"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 11.5,
+            "fontWeight": 400,
+            "color": "#2b2b29",
+            "align": "left",
+            "baseline": "top"
+          },
+          "encoding": {
+            "x": {
+              "value": 14
+            },
+            "y": {
+              "value": 285
+            },
+            "text": {
+              "field": "Line14"
+            },
+            "tooltip": {
+              "field": "SourceText",
+              "title": "Full recommendation"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 11.5,
+            "fontWeight": 400,
+            "color": "#2b2b29",
+            "align": "left",
+            "baseline": "top"
+          },
+          "encoding": {
+            "x": {
+              "value": 14
+            },
+            "y": {
+              "value": 300
+            },
+            "text": {
+              "field": "Line15"
+            },
+            "tooltip": {
+              "field": "SourceText",
+              "title": "Full recommendation"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 11.5,
+            "fontWeight": 400,
+            "color": "#2b2b29",
+            "align": "left",
+            "baseline": "top"
+          },
+          "encoding": {
+            "x": {
+              "value": 14
+            },
+            "y": {
+              "value": 315
+            },
+            "text": {
+              "field": "Line16"
+            },
+            "tooltip": {
+              "field": "SourceText",
+              "title": "Full recommendation"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

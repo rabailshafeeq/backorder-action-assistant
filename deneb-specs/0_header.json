@@ -1,0 +1,206 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "background": "#15151a",
+  "config": {
+    "font": "Segoe UI, sans-serif",
+    "view": { "stroke": "transparent" }
+  },
+  "data": { "name": "dataset" },
+  "transform": [
+    {
+      "aggregate": [
+        { "op": "count", "as": "OpenBackorders" },
+        {
+          "op": "sum",
+          "field": "EstRevenueImpact",
+          "as": "RevenueAtRisk"
+        }
+      ]
+    },
+    {
+      "calculate": "'$' + format(datum.RevenueAtRisk, ',.0f')",
+      "as": "RevenueAtRiskLabel"
+    }
+  ],
+  "layer": [
+    {
+      "data": { "values": [{}] },
+      "mark": {
+        "type": "text",
+        "text": "Backorder Action Assistant",
+        "fontSize": 24,
+        "fontWeight": 700,
+        "color": "#ffffff",
+        "align": "left",
+        "baseline": "top"
+      },
+      "encoding": {
+        "x": { "value": 90 },
+        "y": { "value": 18 }
+      }
+    },
+    {
+      "data": { "values": [{}] },
+      "mark": {
+        "type": "text",
+        "text": "Prioritized backorders across Plants → click a record for AI-driven analysis and recommendations",
+        "fontSize": 13,
+        "fontWeight": 400,
+        "color": "#9a9aa0",
+        "align": "left",
+        "baseline": "top",
+        "limit": { "expr": "width - 780" }
+      },
+      "encoding": {
+        "x": { "value": 90 },
+        "y": { "value": 58 }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "fontSize": 24,
+        "fontWeight": 700,
+        "color": "#ffffff",
+        "align": "right",
+        "baseline": "top"
+      },
+      "encoding": {
+        "x": { "value": { "expr": "width - 560" } },
+        "y": { "value": 20 },
+        "text": { "field": "OpenBackorders", "type": "quantitative", "format": "," }
+      }
+    },
+    {
+      "data": { "values": [{}] },
+      "mark": {
+        "type": "text",
+        "text": "OPEN BACKORDERS",
+        "fontSize": 10,
+        "fontWeight": 600,
+        "color": "#9a9aa0",
+        "align": "right",
+        "baseline": "top"
+      },
+      "encoding": {
+        "x": { "value": { "expr": "width - 560" } },
+        "y": { "value": 52 }
+      }
+    },
+    {
+      "data": { "name": "dataset" },
+      "transform": [
+        { "filter": "datum.PriorityTier == 'Critical'" },
+        { "aggregate": [{ "op": "count", "as": "CriticalCount" }] }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 24,
+        "fontWeight": 700,
+        "color": "#E8724C",
+        "align": "right",
+        "baseline": "top"
+      },
+      "encoding": {
+        "x": { "value": { "expr": "width - 400" } },
+        "y": { "value": 20 },
+        "text": { "field": "CriticalCount", "type": "quantitative", "format": "," }
+      }
+    },
+    {
+      "data": { "values": [{}] },
+      "mark": {
+        "type": "text",
+        "text": "CRITICAL",
+        "fontSize": 10,
+        "fontWeight": 600,
+        "color": "#9a9aa0",
+        "align": "right",
+        "baseline": "top"
+      },
+      "encoding": {
+        "x": { "value": { "expr": "width - 400" } },
+        "y": { "value": 52 }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "fontSize": 24,
+        "fontWeight": 700,
+        "color": "#ffffff",
+        "align": "right",
+        "baseline": "top"
+      },
+      "encoding": {
+        "x": { "value": { "expr": "width - 190" } },
+        "y": { "value": 20 },
+        "text": { "field": "RevenueAtRiskLabel" }
+      }
+    },
+    {
+      "data": { "values": [{}] },
+      "mark": {
+        "type": "text",
+        "text": "REVENUE AT RISK",
+        "fontSize": 10,
+        "fontWeight": 600,
+        "color": "#9a9aa0",
+        "align": "right",
+        "baseline": "top"
+      },
+      "encoding": {
+        "x": { "value": { "expr": "width - 190" } },
+        "y": { "value": 52 }
+      }
+    },
+    {
+      "data": { "name": "dataset" },
+      "transform": [
+        { "filter": "datum.MRPReviewed_Flag == 'No'" },
+        { "aggregate": [{ "op": "count", "as": "UnreviewedCount" }] }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 24,
+        "fontWeight": 700,
+        "color": "#ffffff",
+        "align": "right",
+        "baseline": "top"
+      },
+      "encoding": {
+        "x": { "value": { "expr": "width - 20" } },
+        "y": { "value": 20 },
+        "text": { "field": "UnreviewedCount", "type": "quantitative", "format": "," }
+      }
+    },
+    {
+      "data": { "values": [{}] },
+      "mark": {
+        "type": "text",
+        "text": "UNREVIEWED",
+        "fontSize": 10,
+        "fontWeight": 600,
+        "color": "#9a9aa0",
+        "align": "right",
+        "baseline": "top"
+      },
+      "encoding": {
+        "x": { "value": { "expr": "width - 20" } },
+        "y": { "value": 52 }
+      }
+    },
+    {
+      "data": { "values": [{}] },
+      "mark": { "type": "rect", "height": 3 },
+      "encoding": {
+        "x": { "value": 0 },
+        "x2": { "value": { "expr": "width" } },
+        "y": { "value": { "expr": "height - 3" } },
+        "color": { "value": "#E8724C" }
+      }
+    }
+  ],
+  "width": "container",
+  "height": "container"
+}

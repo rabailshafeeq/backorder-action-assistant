@@ -1,0 +1,118 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "background": "#f9f9f7",
+  "config": {
+    "font": "Segoe UI, sans-serif",
+    "axis": {
+      "labelColor": "#898781",
+      "titleColor": "#898781",
+      "grid": false,
+      "domainColor": "#e1e0d9",
+      "tickColor": "#e1e0d9"
+    },
+    "view": {
+      "stroke": "transparent"
+    }
+  },
+  "title": {
+    "text": "TOP MATERIALS BY REVENUE IMPACT",
+    "fontSize": 12,
+    "color": "#5c5b54",
+    "fontWeight": 700,
+    "anchor": "start",
+    "dy": -6
+  },
+  "data": {
+    "name": "dataset"
+  },
+  "transform": [
+    {
+      "window": [
+        {
+          "op": "rank",
+          "as": "rank"
+        }
+      ],
+      "sort": [
+        {
+          "field": "Sum of EstRevenueImpact",
+          "order": "descending"
+        }
+      ]
+    },
+    {
+      "filter": "datum.rank <= 5"
+    },
+    {
+      "calculate": "'$' + format(datum['Sum of EstRevenueImpact'], ',.0f')",
+      "as": "RevLabel"
+    }
+  ],
+  "layer": [
+    {
+      "mark": {
+        "type": "bar",
+        "color": "#E8724C",
+        "cornerRadiusEnd": 3,
+        "height": 12
+      },
+      "encoding": {
+        "y": {
+          "field": "ItemDesc",
+          "type": "nominal",
+          "sort": "-x",
+          "title": null,
+          "axis": {
+            "labelLimit": 190,
+            "labelFontSize": 12,
+            "labelColor": "#2b2b29"
+          }
+        },
+        "x": {
+          "field": "Sum of EstRevenueImpact",
+          "type": "quantitative",
+          "title": null,
+          "axis": null
+        },
+        "tooltip": [
+          {
+            "field": "ItemDesc",
+            "title": "Material"
+          },
+          {
+            "field": "RevLabel",
+            "title": "Revenue Impact"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 6,
+        "fontSize": 12,
+        "fontWeight": 700,
+        "color": "#0b0b0b",
+        "clip": false
+      },
+      "encoding": {
+        "y": {
+          "field": "ItemDesc",
+          "type": "nominal",
+          "sort": "-x"
+        },
+        "x": {
+          "field": "Sum of EstRevenueImpact",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "RevLabel",
+          "type": "nominal"
+        }
+      }
+    }
+  ],
+  "width": "container",
+  "height": "container"
+}

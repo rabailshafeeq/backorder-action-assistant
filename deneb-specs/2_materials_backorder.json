@@ -1,0 +1,72 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "background": "#f9f9f7",
+  "config": {
+    "font": "Segoe UI, sans-serif",
+    "view": {
+      "stroke": "transparent"
+    }
+  },
+  "data": {
+    "name": "dataset"
+  },
+  "transform": [
+    {
+      "aggregate": [
+        {
+          "op": "distinct",
+          "field": "ItemID",
+          "as": "DistinctItems"
+        }
+      ]
+    }
+  ],
+  "layer": [
+    {
+      "mark": {
+        "type": "text",
+        "text": "MATERIALS WITH BACKORDER",
+        "fontSize": 12,
+        "fontWeight": 700,
+        "color": "#5c5b54",
+        "align": "left",
+        "baseline": "top",
+        "dx": -60,
+        "dy": -40
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "fontSize": 28,
+        "fontWeight": 700,
+        "color": "#0b0b0b",
+        "align": "left",
+        "baseline": "middle",
+        "dx": -60,
+        "dy": -5
+      },
+      "encoding": {
+        "text": {
+          "field": "DistinctItems",
+          "type": "quantitative",
+          "format": ","
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "text": "distinct items, current filter",
+        "fontSize": 12,
+        "color": "#5c5b54",
+        "align": "left",
+        "baseline": "top",
+        "dx": -60,
+        "dy": 18
+      }
+    }
+  ],
+  "width": "container",
+  "height": "container"
+}

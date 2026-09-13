@@ -1,0 +1,222 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "background": "#f9f9f7",
+  "config": {
+    "font": "Segoe UI, sans-serif",
+    "view": {
+      "stroke": "transparent"
+    }
+  },
+  "data": {
+    "name": "dataset"
+  },
+  "transform": [
+    {
+      "filter": "datum.MRPReviewDate_Mock != null"
+    },
+    {
+      "joinaggregate": [
+        {
+          "op": "max",
+          "field": "MRPReviewDate_Mock",
+          "as": "AnchorDate"
+        }
+      ]
+    },
+    {
+      "calculate": "(toDate(datum.AnchorDate) - toDate(datum.MRPReviewDate_Mock)) / 86400000",
+      "as": "daysAgo"
+    },
+    {
+      "filter": "datum.daysAgo >= 0 && datum.daysAgo < 7"
+    },
+    {
+      "calculate": "timeFormat(toDate(datum.MRPReviewDate_Mock), '%a')",
+      "as": "DayLabel"
+    }
+  ],
+  "vconcat": [
+    {
+      "width": "container",
+      "height": 40,
+      "layer": [
+        {
+          "transform": [
+            {
+              "aggregate": [
+                {
+                  "op": "count",
+                  "as": "Total7"
+                }
+              ]
+            }
+          ],
+          "mark": {
+            "type": "text",
+            "fontSize": 22,
+            "fontWeight": 700,
+            "color": "#0b0b0b",
+            "align": "left",
+            "baseline": "top",
+            "dx": -122,
+            "dy": -16
+          },
+          "encoding": {
+            "text": {
+              "field": "Total7",
+              "type": "quantitative",
+              "format": ","
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "text": "REVIEWED \u2014 LAST 7 DAYS",
+            "fontSize": 12,
+            "fontWeight": 700,
+            "color": "#5c5b54",
+            "align": "left",
+            "baseline": "top",
+            "dx": -122,
+            "dy": -38
+          }
+        },
+        {
+          "transform": [
+            {
+              "aggregate": [
+                {
+                  "op": "max",
+                  "field": "AnchorDate",
+                  "as": "AnchorDate"
+                }
+              ]
+            },
+            {
+              "calculate": "'as of ' + timeFormat(toDate(datum.AnchorDate), '%b %d') + ', latest activity in data'",
+              "as": "SubLabel"
+            }
+          ],
+          "mark": {
+            "type": "text",
+            "fontSize": 11.5,
+            "color": "#5c5b54",
+            "align": "left",
+            "baseline": "top",
+            "dx": -122,
+            "dy": 6
+          },
+          "encoding": {
+            "text": {
+              "field": "SubLabel"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "width": "container",
+      "height": 130,
+      "layer": [
+        {
+          "transform": [
+            {
+              "aggregate": [
+                {
+                  "op": "count",
+                  "as": "Reviewed"
+                }
+              ],
+              "groupby": [
+                "MRPReviewDate_Mock",
+                "DayLabel",
+                "daysAgo"
+              ]
+            }
+          ],
+          "mark": {
+            "type": "area",
+            "line": {
+              "color": "#E8724C",
+              "strokeWidth": 2
+            },
+            "color": {
+              "x1": 1,
+              "y1": 1,
+              "x2": 1,
+              "y2": 0,
+              "gradient": "linear",
+              "stops": [
+                {
+                  "offset": 0,
+                  "color": "#ffffff00"
+                },
+                {
+                  "offset": 1,
+                  "color": "#E8724C22"
+                }
+              ]
+            }
+          },
+          "encoding": {
+            "x": {
+              "field": "DayLabel",
+              "type": "ordinal",
+              "sort": { "field": "daysAgo", "order": "descending" },
+              "title": null,
+              "axis": {
+                "labelAngle": 0,
+                "grid": false,
+                "domain": false,
+                "ticks": false,
+                "labelColor": "#5c5b54",
+                "labelFontSize": 11
+              }
+            },
+            "y": {
+              "field": "Reviewed",
+              "type": "quantitative",
+              "title": null,
+              "axis": null
+            }
+          }
+        },
+        {
+          "transform": [
+            {
+              "aggregate": [
+                {
+                  "op": "count",
+                  "as": "Reviewed"
+                }
+              ],
+              "groupby": [
+                "MRPReviewDate_Mock",
+                "DayLabel",
+                "daysAgo"
+              ]
+            }
+          ],
+          "mark": {
+            "type": "point",
+            "filled": true,
+            "color": "#E8724C",
+            "size": 40
+          },
+          "encoding": {
+            "x": {
+              "field": "DayLabel",
+              "type": "ordinal",
+              "sort": { "field": "daysAgo", "order": "descending" }
+            },
+            "y": {
+              "field": "Reviewed",
+              "type": "quantitative"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
